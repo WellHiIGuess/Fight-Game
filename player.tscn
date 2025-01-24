@@ -1,0 +1,81 @@
+[gd_scene load_steps=8 format=3 uid="uid://wa3jj7dmxfhq"]
+
+[ext_resource type="Texture2D" uid="uid://b74ynluxn0x3l" path="res://icon.svg" id="1_4ajqq"]
+[ext_resource type="Script" path="res://PlayerBody.gd" id="2_u6w33"]
+[ext_resource type="Script" path="res://WallClimb.gd" id="3_p1ch1"]
+[ext_resource type="Script" path="res://HitArea.gd" id="4_v5jwa"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jrlxq"]
+radius = 64.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j0yc0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dqmrv"]
+radius = 53.0094
+
+[node name="Player" type="Node2D"]
+
+[node name="Copies" type="Node2D" parent="."]
+
+[node name="1" type="Sprite2D" parent="Copies"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("1_4ajqq")
+
+[node name="2" type="Sprite2D" parent="Copies"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("1_4ajqq")
+
+[node name="3" type="Sprite2D" parent="Copies"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("1_4ajqq")
+
+[node name="4" type="Sprite2D" parent="Copies"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("1_4ajqq")
+
+[node name="5" type="Sprite2D" parent="Copies"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("1_4ajqq")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." node_paths=PackedStringArray("sprite", "spawn_point", "copies", "hit_area", "wall_climb")]
+script = ExtResource("2_u6w33")
+sprite = NodePath("Sprite2D")
+spawn_point = NodePath("../SpawnPoint")
+copies = NodePath("../Copies")
+hit_area = NodePath("HitArea")
+wall_climb = NodePath("WallClimb")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+modulate = Color(1, 0, 0, 1)
+texture = ExtResource("1_4ajqq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("CircleShape2D_jrlxq")
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
+visible = false
+
+[node name="WallClimb" type="Area2D" parent="CharacterBody2D" node_paths=PackedStringArray("player")]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("3_p1ch1")
+player = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/WallClimb"]
+scale = Vector2(7.05, 7.05)
+shape = SubResource("RectangleShape2D_j0yc0")
+
+[node name="HitArea" type="Area2D" parent="CharacterBody2D" node_paths=PackedStringArray("player")]
+script = ExtResource("4_v5jwa")
+player = NodePath("..")
+FORCE = 700.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/HitArea"]
+shape = SubResource("CircleShape2D_dqmrv")
+
+[node name="SpawnPoint" type="Node2D" parent="."]
+
+[connection signal="body_entered" from="CharacterBody2D/WallClimb" to="CharacterBody2D/WallClimb" method="_on_body_entered"]
+[connection signal="body_exited" from="CharacterBody2D/WallClimb" to="CharacterBody2D/WallClimb" method="_on_body_exited"]
+[connection signal="body_entered" from="CharacterBody2D/HitArea" to="CharacterBody2D/HitArea" method="_on_body_entered"]
+[connection signal="body_exited" from="CharacterBody2D/HitArea" to="CharacterBody2D/HitArea" method="_on_body_exited"]

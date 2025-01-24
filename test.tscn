@@ -1,0 +1,156 @@
+[gd_scene load_steps=9 format=3 uid="uid://ektk85wbl6yu"]
+
+[ext_resource type="Texture2D" uid="uid://b74ynluxn0x3l" path="res://icon.svg" id="1_15a8f"]
+[ext_resource type="PackedScene" uid="uid://wa3jj7dmxfhq" path="res://player.tscn" id="1_m58qc"]
+[ext_resource type="Script" path="res://DashArea.gd" id="3_776kd"]
+[ext_resource type="Script" path="res://RespawnArea.gd" id="4_vkchw"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kv44b"]
+radius = 64.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_05snw"]
+size = Vector2(720, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gh3id"]
+size = Vector2(76, 76)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x8u7h"]
+size = Vector2(2434, 104)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.48, 0.48)
+
+[node name="Player" parent="." instance=ExtResource("1_m58qc")]
+position = Vector2(-287, 0)
+
+[node name="CharacterBody2D" parent="Player" index="1"]
+player_num = "2"
+
+[node name="Sprite2D" parent="Player/CharacterBody2D" index="0"]
+rotation = 3.14159
+
+[node name="Player2" parent="." instance=ExtResource("1_m58qc")]
+position = Vector2(288, -4)
+
+[node name="CharacterBody2D" parent="Player2" index="1"]
+player_num = "1"
+
+[node name="CollisionShape2D" parent="Player2/CharacterBody2D" index="1"]
+shape = SubResource("CircleShape2D_kv44b")
+
+[node name="Platform" type="Node2D" parent="."]
+position = Vector2(0, 113)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Platform"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform/StaticBody2D"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_05snw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform/StaticBody2D"]
+position = Vector2(0, 3.8147e-06)
+scale = Vector2(5.625, 0.25)
+texture = ExtResource("1_15a8f")
+
+[node name="Platform2" type="Node2D" parent="."]
+position = Vector2(1192, 0)
+rotation = 1.5708
+scale = Vector2(1.89, 1.89)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Platform2"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2/StaticBody2D"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_05snw")
+
+[node name="Platform3" type="Node2D" parent="."]
+position = Vector2(-1183, -2.85672e-12)
+rotation = 1.5708
+scale = Vector2(1.89, 1.89)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Platform3"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3/StaticBody2D"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_05snw")
+
+[node name="Platform4" type="Node2D" parent="."]
+position = Vector2(1.99988, -679)
+scale = Vector2(3.38, 1.89)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Platform4"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4/StaticBody2D"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_05snw")
+
+[node name="DashArea1" type="Area2D" parent="."]
+position = Vector2(552, -328)
+script = ExtResource("3_776kd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DashArea1"]
+shape = SubResource("RectangleShape2D_gh3id")
+
+[node name="Sprite2D" type="Sprite2D" parent="DashArea1"]
+position = Vector2(8.58307e-06, 0)
+scale = Vector2(0.589844, 0.597656)
+texture = ExtResource("1_15a8f")
+
+[node name="DashArea2" type="Area2D" parent="."]
+position = Vector2(-599, -310)
+script = ExtResource("3_776kd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DashArea2"]
+shape = SubResource("RectangleShape2D_gh3id")
+
+[node name="Sprite2D" type="Sprite2D" parent="DashArea2"]
+position = Vector2(8.58307e-06, 0)
+scale = Vector2(0.589844, 0.597656)
+texture = ExtResource("1_15a8f")
+
+[node name="DashArea3" type="Area2D" parent="."]
+position = Vector2(-1, -468)
+script = ExtResource("3_776kd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DashArea3"]
+shape = SubResource("RectangleShape2D_gh3id")
+
+[node name="Sprite2D" type="Sprite2D" parent="DashArea3"]
+position = Vector2(8.58307e-06, 0)
+scale = Vector2(0.589844, 0.597656)
+texture = ExtResource("1_15a8f")
+
+[node name="DashArea4" type="Area2D" parent="."]
+position = Vector2(1, 348)
+script = ExtResource("3_776kd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DashArea4"]
+shape = SubResource("RectangleShape2D_gh3id")
+
+[node name="Sprite2D" type="Sprite2D" parent="DashArea4"]
+position = Vector2(8.58307e-06, 0)
+scale = Vector2(0.589844, 0.597656)
+texture = ExtResource("1_15a8f")
+
+[node name="RespawnArea" type="Area2D" parent="."]
+position = Vector2(0, 673)
+script = ExtResource("4_vkchw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RespawnArea"]
+position = Vector2(7, 54)
+shape = SubResource("RectangleShape2D_x8u7h")
+
+[connection signal="body_entered" from="DashArea1" to="DashArea1" method="_on_body_entered"]
+[connection signal="body_exited" from="DashArea1" to="DashArea1" method="_on_body_exited"]
+[connection signal="body_entered" from="DashArea2" to="DashArea2" method="_on_body_entered"]
+[connection signal="body_exited" from="DashArea2" to="DashArea2" method="_on_body_exited"]
+[connection signal="body_entered" from="DashArea3" to="DashArea3" method="_on_body_entered"]
+[connection signal="body_exited" from="DashArea3" to="DashArea3" method="_on_body_exited"]
+[connection signal="body_entered" from="DashArea4" to="DashArea4" method="_on_body_entered"]
+[connection signal="body_exited" from="DashArea4" to="DashArea4" method="_on_body_exited"]
+[connection signal="body_entered" from="RespawnArea" to="RespawnArea" method="_on_body_entered"]
+
+[editable path="Player"]
+[editable path="Player2"]
