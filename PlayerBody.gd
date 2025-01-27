@@ -1,8 +1,6 @@
 extends Player
 
 
-@export var player_num: String
-
 const SPEED = 500.0
 const DASH_SPEED = 2000.0
 const JUMP_VELOCITY = -600.0
