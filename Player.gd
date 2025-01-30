@@ -23,14 +23,14 @@ enum Perk {
 	None,
 	SizeIncrease,
 	SizeDecrease,
-    # Probably not gonna add that
+	# Probably not gonna add that
 	DashRecover,
 	SpeedIncrease,
 	DashSpeedIncrease,
 	BiggerHitArea,
 	HarderDash,
-	DashSizeDecrease,
 	SquareCollider,
+	# To be implimented
 	KonamiCode,
 	DoubleDash,
 }

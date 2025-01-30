@@ -1,9 +1,10 @@
 extends Player
 
 
-const SPEED = 500.0
-const DASH_SPEED = 2000.0
-const JUMP_VELOCITY = -600.0
+var SPEED = 500.0
+var INIT_DASH_SPEED = 2000.0
+var DASH_SPEED = 2000.0
+var JUMP_VELOCITY = -600.0
 const WALL_JUMP_VELOCITY = 50000.0
 const TRIPLE_JUMP_VELOCITY = -400.0
 const DASH_TIME = 0.5
@@ -24,6 +25,7 @@ var direction: Vector2
 var hit_velocity: Vector2
 
 @export var sprite: Sprite2D
+@export var collider: CollisionShape2D
 @export var spawn_point: Node2D
 
 const SPRITE_SQUASH = 0.1
@@ -40,6 +42,7 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 var can_dash = false
 var dashing = false
+var second_dash = false
 var dash_time = DASH_TIME
 var dash_stun = 0.0
 var dash_dir = Vector2.ZERO
@@ -49,6 +52,29 @@ var dash_buffered = false
 var climbing_wall = false
 
 func _ready():
+	match perk:
+		Perk.SizeIncrease:
+			sprite.scale *= 1.25
+			collider.scale *= 1.25
+		Perk.SizeDecrease:
+			sprite.scale *= 0.75
+			collider.scale *= 0.75
+		Perk.SpeedIncrease:
+			SPEED += 200.0
+			JUMP_VELOCITY -= 200.0
+		Perk.DashSpeedIncrease:
+			DASH_SPEED += 500.0
+		Perk.BiggerHitArea:
+			hit_area.scale *= 1.5
+		Perk.HarderDash:
+			hit_area.FORCE *= 1.25
+		Perk.SquareCollider:
+			var rect = RectangleShape2D.new()
+			rect.extents = Vector2(64, 64)
+			collider.shape = rect
+
+	INIT_DASH_SPEED = DASH_SPEED
+
 	sprite_width = sprite.scale.x
 
 	var json_string = "[0, 1, 2, 3, 4, 5]"
@@ -75,11 +101,17 @@ func respawn():
 
 func _process(delta):
 	if can_dash:
-		sprite.modulate.b = 0.0
+		sprite.modulate.r = 1.0
 		sprite.modulate.g = 0.0
-	else:
-		sprite.modulate.b = 1.0
+		sprite.modulate.b = 0.0
+	elif second_dash:
+		sprite.modulate.r = 0.0
 		sprite.modulate.g = 1.0
+		sprite.modulate.b = 0.0
+	else:
+		sprite.modulate.r = 1.0
+		sprite.modulate.g = 1.0
+		sprite.modulate.b = 1.0
 
 
 	copy_wait -= delta
@@ -142,7 +174,12 @@ func _physics_process(delta):
 	if is_on_floor() && !dashing:
 		can_dash = true
 
-	sprite.scale.x = sprite_width
+		match special:
+			Special.SecondDash:
+				second_dash = true
+
+	if !dashing:
+		sprite.scale.x = sprite_width
 
 	if dash_stun >= 0.0:
 		can_dash = false
@@ -157,6 +194,18 @@ func _physics_process(delta):
 		dash_buffered = false
 	elif Input.is_action_just_pressed("Dash" + player_num) && (dash_time <= DASH_BUFFER) && dashing && !dash_buffered:
 		dash_buffered = true
+
+	# Specials
+	if Input.is_action_just_pressed("Special" + player_num):
+		match special:
+			Special.SecondDash:
+				if (second_dash && !dashing) || (dash_buffered && !dashing && second_dash):
+					second_dash = false
+					dashing = true
+					dash_dir = direction
+					dash_buffered = false
+					DASH_SPEED -= 750
+
 		
 
 	if dashing:
@@ -167,6 +216,7 @@ func _physics_process(delta):
 			dashing = false
 			dash_time = DASH_TIME
 			velocity = Vector2.ZERO
+			DASH_SPEED = INIT_DASH_SPEED
 
 	if hit_velocity.x > 0.0:
 		hit_velocity.x -= 500.0 * delta
