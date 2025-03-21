@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://wa3jj7dmxfhq"]
 
 [ext_resource type="Texture2D" uid="uid://b74ynluxn0x3l" path="res://icon.svg" id="1_4ajqq"]
-[ext_resource type="Script" path="res://PlayerBody.gd" id="2_u6w33"]
-[ext_resource type="Script" path="res://HitArea.gd" id="4_v5jwa"]
+[ext_resource type="Script" uid="uid://btjvxkmbbtn25" path="res://PlayerBody.gd" id="2_u6w33"]
+[ext_resource type="Script" uid="uid://dhaar87xe76ff" path="res://HitArea.gd" id="4_v5jwa"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrlxq"]
 radius = 64.0
@@ -34,14 +34,13 @@ texture = ExtResource("1_4ajqq")
 modulate = Color(1, 1, 1, 0)
 texture = ExtResource("1_4ajqq")
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="." node_paths=PackedStringArray("sprite", "collider", "spawn_point", "copies", "hit_area", "wall_climb")]
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." node_paths=PackedStringArray("sprite", "collider", "spawn_point", "copies", "hit_area")]
 script = ExtResource("2_u6w33")
 sprite = NodePath("Sprite2D")
 collider = NodePath("CollisionShape2D")
 spawn_point = NodePath("../SpawnPoint")
 copies = NodePath("../Copies")
 hit_area = NodePath("HitArea")
-wall_climb = NodePath("")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
 modulate = Color(1, 0, 0, 1)

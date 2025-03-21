@@ -20,6 +20,12 @@ func _process(delta):
 		player.dashing = false
 		body_in_area.dash_stun = body_in_area.DASH_STUN
 
+		if body_in_area.parry_buffer > 0.0:
+			player.hit_velocity = -body_in_area.PARRY_FORCE * player.direction.normalized()
+			player.dashing = false
+			player.dash_stun = body_in_area.DASH_STUN
+			
+
 		# Character Idea
 		# player.can_dash = true
 		# player.dash_time = player.DASH_TIME

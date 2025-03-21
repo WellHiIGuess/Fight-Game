@@ -20,6 +20,13 @@ var coyote_time = 0.0
 
 const DASH_BUFFER = 0.2
 
+# Special constants
+const PARRY_BUFFER = 1.0
+const PARRY_FORCE = 1400.0
+
+# Special variables
+var parry_buffer = 0.0
+
 var direction: Vector2
 
 var hit_velocity: Vector2
@@ -38,6 +45,7 @@ var copy_wait = COPY_WAIT
 @export var hit_area: HitArea
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
+var GRAVITY = ProjectSettings.get_setting("physics/2d/default_gravity")
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 var can_dash = false
@@ -50,6 +58,17 @@ var dash_buffered = false
 
 @export var wall_climb: WallClimb
 var climbing_wall = false
+
+func _enter_tree():
+	if special == Special.Random:
+		var r = randi_range(0, 11)
+		special = r
+		print(special)
+
+	if perk == Perk.Random:
+		var r = randi_range(0, 8)
+		perk = r
+
 
 func _ready():
 	match perk:
@@ -86,8 +105,6 @@ func _ready():
 	if result == OK:
 		# Successfully parsed, access the data
 		var data = json.get_data()
-
-		print(data[1])
 	else:
 		print("Failed to parse JSON")
 
@@ -113,6 +130,22 @@ func _process(delta):
 		sprite.modulate.g = 1.0
 		sprite.modulate.b = 1.0
 
+	if parry_buffer > 0.0:
+		sprite.modulate.r = 0.0
+		sprite.modulate.g = 0.0
+		sprite.modulate.b = 1.0
+
+		gravity = 0.0
+		direction = Vector2.ZERO
+		dash_stun = 0.0
+
+		parry_buffer -= delta
+	else:
+		sprite.modulate.r = 1.0
+		sprite.modulate.g = 1.0
+		sprite.modulate.b = 1.0
+
+		gravity = GRAVITY
 
 	copy_wait -= delta
 
@@ -205,6 +238,9 @@ func _physics_process(delta):
 					dash_dir = direction
 					dash_buffered = false
 					DASH_SPEED -= 750
+			Special.Parry:
+				if parry_buffer <= 0.0:
+					parry_buffer = PARRY_BUFFER
 
 		
 
@@ -235,6 +271,13 @@ func _physics_process(delta):
 		hit_velocity.y += 500.0 * delta
 		if hit_velocity.y > 0.0:
 			hit_velocity.y = 0.0
+
+	if parry_buffer > 0.0:
+		gravity = 0.0
+		velocity = Vector2.ZERO
+		hit_velocity = Vector2.ZERO
+	else:
+		gravity = GRAVITY
 
 	hit_area.position = direction * 100
 

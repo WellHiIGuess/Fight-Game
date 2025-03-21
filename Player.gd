@@ -4,7 +4,7 @@ extends CharacterBody2D
 # All of these are being tested and might not be in the final game(Double Jump might be a perk)
 enum Special {
 	None,
-	SecondDash,
+	SecondDash, # Done
 	Parry,
 	GroundSlam,
 	TimeSlow,
@@ -23,8 +23,6 @@ enum Perk {
 	None,
 	SizeIncrease,
 	SizeDecrease,
-	# Probably not gonna add that
-	DashRecover,
 	SpeedIncrease,
 	DashSpeedIncrease,
 	BiggerHitArea,
@@ -32,7 +30,7 @@ enum Perk {
 	SquareCollider,
 	# To be implimented
 	KonamiCode,
-	DoubleDash,
+	Random,
 }
 
 @export var special: Special = Special.None
