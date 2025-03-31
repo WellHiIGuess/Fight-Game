@@ -6,7 +6,6 @@ enum Special {
 	None,
 	SecondDash, # Done
 	Parry,
-	GroundSlam,
 	TimeSlow,
 	StunShot,
 	RadialShove,

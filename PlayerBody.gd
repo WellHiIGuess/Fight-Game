@@ -23,11 +23,21 @@ const DASH_BUFFER = 0.2
 # Special constants
 const PARRY_BUFFER = 1.0
 const PARRY_FORCE = 1400.0
+const PARRY_COOLDOWN = 2.0
+
+const TIME_STOP_BUFFER = 1.0
+const SLOWED_TIME_MULT = 0.25
+const TIME_STOP_COOLDOWN = 5.0
 
 # Special variables
 var parry_buffer = 0.0
+var parry_cooldown = -1.0
+
+var time_stop_buffer = 0.0
+var time_stop_cooldown = -1.0
 
 var direction: Vector2
+var time_mult = 1.0
 
 var hit_velocity: Vector2
 
@@ -58,6 +68,9 @@ var dash_buffered = false
 
 @export var wall_climb: WallClimb
 var climbing_wall = false
+
+@export var camera: Camera2D
+@export var other_player: Player
 
 func _enter_tree():
 	if special == Special.Random:
@@ -130,6 +143,7 @@ func _process(delta):
 		sprite.modulate.g = 1.0
 		sprite.modulate.b = 1.0
 
+	# PARRY
 	if parry_buffer > 0.0:
 		sprite.modulate.r = 0.0
 		sprite.modulate.g = 0.0
@@ -138,14 +152,31 @@ func _process(delta):
 		gravity = 0.0
 		direction = Vector2.ZERO
 		dash_stun = 0.0
+		parry_cooldown = 0.0
 
-		parry_buffer -= delta
-	else:
-		sprite.modulate.r = 1.0
+		parry_buffer -= delta * time_mult
+	elif parry_cooldown == 0.0:
+		parry_cooldown = PARRY_COOLDOWN
+
+	if special == Special.Parry && parry_cooldown > 0.0:
+		parry_cooldown -= delta * time_mult
+
+	# TIME STOP
+	if time_stop_buffer > 0.0:
+		camera.slow_time = true
+		time_stop_cooldown = 0.0
+		other_player.time_mult = SLOWED_TIME_MULT
+		time_stop_buffer -= delta * time_mult
+	elif time_stop_cooldown == 0.0:
+		time_stop_cooldown = TIME_STOP_COOLDOWN
+		other_player.time_mult = 1.0
+
+	if special == Special.TimeSlow && time_stop_cooldown > 0.0:
+		time_stop_cooldown -= delta * time_mult
+
+		sprite.modulate.r = 0.0
 		sprite.modulate.g = 1.0
-		sprite.modulate.b = 1.0
-
-		gravity = GRAVITY
+		sprite.modulate.b = 0.0
 
 	copy_wait -= delta
 
@@ -239,8 +270,11 @@ func _physics_process(delta):
 					dash_buffered = false
 					DASH_SPEED -= 750
 			Special.Parry:
-				if parry_buffer <= 0.0:
+				if parry_buffer <= 0.0 && parry_cooldown <= 0.0:
 					parry_buffer = PARRY_BUFFER
+			Special.TimeSlow:
+				if time_stop_buffer <= 0.0 && time_stop_cooldown <= 0.0:
+					time_stop_buffer = TIME_STOP_BUFFER
 
 		
 
@@ -255,20 +289,20 @@ func _physics_process(delta):
 			DASH_SPEED = INIT_DASH_SPEED
 
 	if hit_velocity.x > 0.0:
-		hit_velocity.x -= 500.0 * delta
+		hit_velocity.x -= 500.0 * delta * time_mult
 		if hit_velocity.x < 0.0:
 			hit_velocity.x = 0.0
 	elif hit_velocity.x < 0.0:
-		hit_velocity.x += 500.0 * delta
+		hit_velocity.x += 500.0 * delta * time_mult
 		if hit_velocity.x > 0.0:
 			hit_velocity.x = 0.0
 
 	if hit_velocity.y > 0.0:
-		hit_velocity.y -= 500.0 * delta
+		hit_velocity.y -= 500.0 * delta * time_mult
 		if hit_velocity.y < 0.0:
 			hit_velocity.y = 0.0
 	elif hit_velocity.y < 0.0:
-		hit_velocity.y += 500.0 * delta
+		hit_velocity.y += 500.0 * delta * time_mult
 		if hit_velocity.y > 0.0:
 			hit_velocity.y = 0.0
 
@@ -286,7 +320,9 @@ func _physics_process(delta):
 
 		if collision.get_collider() != null && collision.get_collider() is RigidBody2D && is_on_wall():
 			collision.get_collider().linear_velocity.x = velocity.x
+		
+	velocity *= time_mult
 
 	move_and_slide()
 
-	position += hit_velocity * delta
+	position += hit_velocity * delta * time_mult

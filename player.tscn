@@ -49,9 +49,6 @@ texture = ExtResource("1_4ajqq")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 shape = SubResource("CircleShape2D_jrlxq")
 
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
-visible = false
-
 [node name="HitArea" type="Area2D" parent="CharacterBody2D" node_paths=PackedStringArray("player")]
 script = ExtResource("4_v5jwa")
 player = NodePath("..")
