@@ -19,6 +19,7 @@ func _process(delta):
 		player.hit_velocity = (FORCE / 2.0) * -player.get_distance(player, body_in_area).normalized()
 		player.dashing = false
 		body_in_area.dash_stun = body_in_area.DASH_STUN
+		body_in_area.hit_reversed = false
 
 		if body_in_area.parry_buffer > 0.0:
 			player.hit_velocity = -body_in_area.PARRY_FORCE * player.direction.normalized()

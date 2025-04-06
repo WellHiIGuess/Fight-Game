@@ -45,6 +45,7 @@ var direction: Vector2
 var time_mult = 1.0
 
 var hit_velocity: Vector2
+var hit_reversed = false
 
 @export var stun_shot_parent: HitArea
 @export var sprite: Sprite2D
@@ -350,5 +351,13 @@ func _physics_process(delta):
 	velocity *= time_mult
 
 	move_and_slide()
+
+	if is_on_ceiling() && hit_velocity.y < 0 && !hit_reversed:
+		hit_velocity.y *= -1
+		hit_reversed = true
+
+	if is_on_floor() && hit_velocity.y > 0 && !hit_reversed:
+		hit_velocity.y *= -1
+		hit_reversed = true
 
 	position += hit_velocity * delta * time_mult
