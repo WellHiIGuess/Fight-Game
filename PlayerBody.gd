@@ -29,12 +29,17 @@ const TIME_STOP_BUFFER = 1.0
 const SLOWED_TIME_MULT = 0.25
 const TIME_STOP_COOLDOWN = 5.0
 
+const STUN_SHOT_COOLDOWN = 1.0
+
 # Special variables
 var parry_buffer = 0.0
 var parry_cooldown = -1.0
 
 var time_stop_buffer = 0.0
 var time_stop_cooldown = -1.0
+
+var stun_shot_cooldown = 0.0
+var can_stun_shot = true
 
 var direction: Vector2
 var time_mult = 1.0
@@ -172,6 +177,12 @@ func _process(delta):
 		time_stop_cooldown = TIME_STOP_COOLDOWN
 		other_player.time_mult = 1.0
 
+	# STUN SHOT
+	if stun_shot_cooldown > 0.0:
+		stun_shot_cooldown -= delta
+	else:
+		can_stun_shot = true
+
 	if special == Special.TimeSlow && time_stop_cooldown > 0.0:
 		time_stop_cooldown -= delta * time_mult
 
@@ -277,17 +288,21 @@ func _physics_process(delta):
 				if time_stop_buffer <= 0.0 && time_stop_cooldown <= 0.0:
 					time_stop_buffer = TIME_STOP_BUFFER
 			Special.StunShot:
-				var new_shot = stun_shot_parent.duplicate()
-				new_shot.visible = true
-				new_shot.player = self
-				new_shot.position = position + get_parent().position
+				if can_stun_shot:
+					var new_shot = stun_shot_parent.duplicate()
+					new_shot.visible = true
+					new_shot.player = self
+					new_shot.position = position + get_parent().position
 
-				if get_distance(self, other_player).x > 0:
-					new_shot.direction = Vector2(1, 0)
-				else:
-					new_shot.direction = Vector2(-1, 0)
+					if get_distance(self, other_player).x > 0:
+						new_shot.direction = Vector2(1, 0)
+					else:
+						new_shot.direction = Vector2(-1, 0)
 
-				get_parent().get_parent().add_child(new_shot)
+					get_parent().get_parent().add_child(new_shot)
+					
+					stun_shot_cooldown = STUN_SHOT_COOLDOWN
+					can_stun_shot = false
 
 	if dashing:
 		dash_time -= delta
