@@ -35,3 +35,6 @@ enum Perk {
 @export var special: Special = Special.None
 @export var perk: Perk = Perk.None
 @export var player_num: String
+
+func get_distance(player1: Player, player2: Player) -> Vector2:
+	return (player2.global_position) - (player1.global_position)

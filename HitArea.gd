@@ -15,8 +15,8 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if player.dashing && body_in_area != null && player.time_mult == 1.0:
-		body_in_area.hit_velocity = FORCE * player.direction.normalized()
-		player.hit_velocity = (FORCE / 2.0) * -player.direction.normalized()
+		body_in_area.hit_velocity += FORCE * player.get_distance(player, body_in_area).normalized()
+		player.hit_velocity = (FORCE / 2.0) * -player.get_distance(player, body_in_area).normalized()
 		player.dashing = false
 		body_in_area.dash_stun = body_in_area.DASH_STUN
 

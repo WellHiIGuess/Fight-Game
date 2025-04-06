@@ -21,9 +21,9 @@ var coyote_time = 0.0
 const DASH_BUFFER = 0.2
 
 # Special constants
-const PARRY_BUFFER = 1.0
+const PARRY_BUFFER = 0.15
 const PARRY_FORCE = 1400.0
-const PARRY_COOLDOWN = 2.0
+const PARRY_COOLDOWN = 1.0
 
 const TIME_STOP_BUFFER = 1.0
 const SLOWED_TIME_MULT = 0.25
@@ -41,6 +41,7 @@ var time_mult = 1.0
 
 var hit_velocity: Vector2
 
+@export var stun_shot_parent: HitArea
 @export var sprite: Sprite2D
 @export var collider: CollisionShape2D
 @export var spawn_point: Node2D
@@ -275,8 +276,18 @@ func _physics_process(delta):
 			Special.TimeSlow:
 				if time_stop_buffer <= 0.0 && time_stop_cooldown <= 0.0:
 					time_stop_buffer = TIME_STOP_BUFFER
+			Special.StunShot:
+				var new_shot = stun_shot_parent.duplicate()
+				new_shot.visible = true
+				new_shot.player = self
+				new_shot.position = position + get_parent().position
 
-		
+				if get_distance(self, other_player).x > 0:
+					new_shot.direction = Vector2(1, 0)
+				else:
+					new_shot.direction = Vector2(-1, 0)
+
+				get_parent().get_parent().add_child(new_shot)
 
 	if dashing:
 		dash_time -= delta

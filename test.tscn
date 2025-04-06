@@ -1,14 +1,19 @@
-[gd_scene load_steps=12 format=3 uid="uid://ektk85wbl6yu"]
+[gd_scene load_steps=15 format=3 uid="uid://ektk85wbl6yu"]
 
 [ext_resource type="Texture2D" uid="uid://b74ynluxn0x3l" path="res://icon.svg" id="1_15a8f"]
 [ext_resource type="Script" uid="uid://iphvbxg0swwv" path="res://camera.gd" id="1_g14j6"]
 [ext_resource type="PackedScene" uid="uid://wa3jj7dmxfhq" path="res://player.tscn" id="1_m58qc"]
 [ext_resource type="Shader" uid="uid://b1gafd5gwfmis" path="res://shaders/NormalMode.gdshader" id="1_ykrsh"]
 [ext_resource type="Script" uid="uid://cgc2v4ihjjwxa" path="res://DashArea.gd" id="3_776kd"]
+[ext_resource type="Script" uid="uid://3spa4e8ilr5h" path="res://StunShotArea.gd" id="3_ehkex"]
 [ext_resource type="Script" uid="uid://cedvaaukrbffw" path="res://RespawnArea.gd" id="4_vkchw"]
+[ext_resource type="Texture2D" uid="uid://ge8biqlqni5t" path="res://Sprite-0001.png" id="4_xersf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g14j6"]
 shader = ExtResource("1_ykrsh")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_00tp4"]
+radius = 21.095
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kv44b"]
 radius = 64.0
@@ -38,15 +43,30 @@ offset_top = -757.0
 offset_right = 1325.0
 offset_bottom = 858.0
 
+[node name="StunShotParent" type="Area2D" parent="."]
+visible = false
+script = ExtResource("3_ehkex")
+FORCE = 400.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StunShotParent"]
+shape = SubResource("CircleShape2D_00tp4")
+
+[node name="Sprite2D" type="Sprite2D" parent="StunShotParent/CollisionShape2D"]
+texture_filter = 1
+scale = Vector2(1.21, 1.21)
+texture = ExtResource("4_xersf")
+
 [node name="Player" parent="." instance=ExtResource("1_m58qc")]
 position = Vector2(-287, 0)
 
-[node name="CharacterBody2D" parent="Player" index="1" node_paths=PackedStringArray("camera", "other_player")]
+[node name="CharacterBody2D" parent="Player" index="1" node_paths=PackedStringArray("stun_shot_parent", "camera", "other_player")]
 collision_layer = 5
 collision_mask = 5
+stun_shot_parent = NodePath("../../StunShotParent")
 camera = NodePath("../../Camera2D")
 other_player = NodePath("../../Player2/CharacterBody2D")
-special = 3
+special = 4
+perk = 6
 player_num = "2"
 
 [node name="Sprite2D" parent="Player/CharacterBody2D" index="0"]
@@ -55,21 +75,25 @@ rotation = 3.14159
 [node name="Player2" parent="." instance=ExtResource("1_m58qc")]
 position = Vector2(288, -4)
 
-[node name="CharacterBody2D" parent="Player2" index="1" node_paths=PackedStringArray("camera", "other_player")]
+[node name="CharacterBody2D" parent="Player2" index="1" node_paths=PackedStringArray("stun_shot_parent", "camera", "other_player")]
 collision_layer = 9
 collision_mask = 9
+stun_shot_parent = NodePath("../../StunShotParent")
 camera = NodePath("../../Camera2D")
 other_player = NodePath("../../Player/CharacterBody2D")
-special = 2
+special = 4
 player_num = "1"
 
 [node name="CollisionShape2D" parent="Player2/CharacterBody2D" index="1"]
 shape = SubResource("CircleShape2D_kv44b")
 
 [node name="Platform" type="Node2D" parent="."]
-position = Vector2(0, 113)
+position = Vector2(0, 147)
+scale = Vector2(1, 2.7)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Platform"]
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform/StaticBody2D"]
 position = Vector2(0, -0.5)
@@ -86,6 +110,8 @@ rotation = 1.5708
 scale = Vector2(1.89, 1.89)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Platform2"]
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2/StaticBody2D"]
 position = Vector2(0, -0.5)
@@ -97,6 +123,8 @@ rotation = 1.5708
 scale = Vector2(1.89, 1.89)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Platform3"]
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3/StaticBody2D"]
 position = Vector2(0, -0.5)
@@ -107,6 +135,8 @@ position = Vector2(1.99988, -679)
 scale = Vector2(3.38, 1.89)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Platform4"]
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4/StaticBody2D"]
 position = Vector2(0, -0.5)
@@ -168,6 +198,8 @@ script = ExtResource("4_vkchw")
 position = Vector2(7, 54)
 shape = SubResource("RectangleShape2D_x8u7h")
 
+[connection signal="body_entered" from="StunShotParent" to="StunShotParent" method="_on_body_entered"]
+[connection signal="body_exited" from="StunShotParent" to="StunShotParent" method="_on_body_exited"]
 [connection signal="body_entered" from="DashArea1" to="DashArea1" method="_on_body_entered"]
 [connection signal="body_exited" from="DashArea1" to="DashArea1" method="_on_body_exited"]
 [connection signal="body_entered" from="DashArea2" to="DashArea2" method="_on_body_entered"]
