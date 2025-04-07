@@ -2,10 +2,15 @@ class_name StunShotArea
 extends HitArea
 
 const STUN_SHOT_SPEED = 400.0
+const LIFE_TIME = 5.0
 
 var direction = Vector2.ZERO
-var enabled = false
 var default_scale_x = 0
+
+var enabled = false
+var life_time = 0.0
+
+var time_mult = 1.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -15,6 +20,15 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if visible:
+		enabled = true
+
+	if enabled:
+		life_time += delta
+
+	if life_time >= LIFE_TIME:
+		queue_free()
+
 	if direction.x > 0:
 		scale.x = default_scale_x
 	elif direction.x < 0:
@@ -29,7 +43,7 @@ func _process(delta):
 
 func _physics_process(delta):
 	if visible:
-		position += STUN_SHOT_SPEED * direction * delta
+		position += STUN_SHOT_SPEED * direction * time_mult * delta
 
 func _on_body_entered(body):
 	if body is Player && body != player:

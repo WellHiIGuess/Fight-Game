@@ -174,9 +174,17 @@ func _process(delta):
 		time_stop_cooldown = 0.0
 		other_player.time_mult = SLOWED_TIME_MULT
 		time_stop_buffer -= delta * time_mult
+
+		for child in get_parent().get_parent().get_children():
+			if child is StunShotArea:
+				child.time_mult = SLOWED_TIME_MULT
 	elif time_stop_cooldown == 0.0:
 		time_stop_cooldown = TIME_STOP_COOLDOWN
 		other_player.time_mult = 1.0
+
+		for child in get_parent().get_parent().get_children():
+			if child is StunShotArea:
+				child.time_mult = 1.0
 
 	# STUN SHOT
 	if stun_shot_cooldown > 0.0:
