@@ -1,7 +1,7 @@
 class_name StunShotArea
 extends HitArea
 
-const STUN_SHOT_SPEED = 400.0
+const STUN_SHOT_SPEED = 1400.0
 const LIFE_TIME = 5.0
 
 var direction = Vector2.ZERO

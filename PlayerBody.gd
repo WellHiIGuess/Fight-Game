@@ -1,10 +1,10 @@
 extends Player
 
 
-var SPEED = 500.0
-var INIT_DASH_SPEED = 2000.0
-var DASH_SPEED = 2000.0
-var JUMP_VELOCITY = -600.0
+var SPEED = 1500.0
+var INIT_DASH_SPEED = 3000.0
+var DASH_SPEED = 3000.0
+var JUMP_VELOCITY = -800.0
 const WALL_JUMP_VELOCITY = 50000.0
 const TRIPLE_JUMP_VELOCITY = -400.0
 const DASH_TIME = 0.5
@@ -14,7 +14,7 @@ const COPY_WAIT = 0.7
 const JUMP_BUFFER = 0.2
 var jump_buffer = 0.0
 
-const COYOTE_TIME = 0.2
+const COYOTE_TIME = 0.13
 var can_coyote = true
 var coyote_time = 0.0
 
@@ -25,7 +25,7 @@ const PARRY_BUFFER = 0.15
 const PARRY_FORCE = 1400.0
 const PARRY_COOLDOWN = 1.0
 
-const TIME_STOP_BUFFER = 1.0
+const TIME_STOP_BUFFER = 2.5
 const SLOWED_TIME_MULT = 0.25
 const TIME_STOP_COOLDOWN = 5.0
 
@@ -106,7 +106,7 @@ func _ready():
 		Perk.BiggerHitArea:
 			hit_area.scale *= 1.5
 		Perk.HarderDash:
-			hit_area.FORCE *= 1.25
+			hit_area.FORCE *= 1.5
 		Perk.SquareCollider:
 			var rect = RectangleShape2D.new()
 			rect.extents = Vector2(64, 64)
@@ -135,20 +135,21 @@ func respawn():
 	dash_stun = 0.0
 	dash_buffered = false
 	hit_velocity = Vector2.ZERO
+	sprite.rotation = 0
 
 func _process(delta):
-	if can_dash:
-		sprite.modulate.r = 1.0
-		sprite.modulate.g = 0.0
-		sprite.modulate.b = 0.0
-	elif second_dash:
-		sprite.modulate.r = 0.0
-		sprite.modulate.g = 1.0
-		sprite.modulate.b = 0.0
-	else:
-		sprite.modulate.r = 1.0
-		sprite.modulate.g = 1.0
-		sprite.modulate.b = 1.0
+	# if can_dash:
+	# 	sprite.modulate.r = 1.0
+	# 	sprite.modulate.g = 0.0
+	# 	sprite.modulate.b = 0.0
+	# elif second_dash:
+	# 	sprite.modulate.r = 0.0
+	# 	sprite.modulate.g = 1.0
+	# 	sprite.modulate.b = 0.0
+	# else:
+	# 	sprite.modulate.r = 1.0
+	# 	sprite.modulate.g = 1.0
+	# 	sprite.modulate.b = 1.0
 
 	# PARRY
 	if parry_buffer > 0.0:
@@ -223,7 +224,7 @@ func jump():
 
 func _physics_process(delta):
 	# Add the gravity.
-	if not is_on_floor():
+	if not is_on_floor() && !(is_on_ceiling() && hit_velocity.y < 0):
 		velocity.y += gravity * delta
 
 	# Get the input direction and handle the movement/deceleration.
@@ -367,5 +368,8 @@ func _physics_process(delta):
 	if is_on_floor() && hit_velocity.y > 0 && !hit_reversed:
 		hit_velocity.y *= -1
 		hit_reversed = true
+
+	if is_on_ceiling() && hit_velocity.y < 0:
+		hit_velocity.y = 0
 
 	position += hit_velocity * delta * time_mult

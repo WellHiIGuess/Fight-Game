@@ -30,23 +30,26 @@ size = Vector2(2434, 104)
 [node name="Node2D" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("rect")]
-zoom = Vector2(0.48, 0.48)
+texture_filter = 1
+zoom = Vector2(0.5, 0.5)
 script = ExtResource("1_g14j6")
 rect = NodePath("CanvasLayer/ColorRect")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/CanvasLayer"]
+texture_filter = 1
 material = SubResource("ShaderMaterial_g14j6")
 offset_left = -1296.0
 offset_top = -757.0
 offset_right = 1325.0
 offset_bottom = 858.0
+metadata/_edit_use_anchors_ = true
 
 [node name="StunShotParent" type="Area2D" parent="."]
 visible = false
 script = ExtResource("3_ehkex")
-FORCE = 400.0
+FORCE = 800.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StunShotParent"]
 shape = SubResource("CircleShape2D_00tp4")
@@ -65,11 +68,8 @@ collision_mask = 5
 stun_shot_parent = NodePath("../../StunShotParent")
 camera = NodePath("../../Camera2D")
 other_player = NodePath("../../Player2/CharacterBody2D")
-special = 5
+special = 4
 player_num = "2"
-
-[node name="Sprite2D" parent="Player/CharacterBody2D" index="0"]
-rotation = 3.14159
 
 [node name="Player2" parent="." instance=ExtResource("1_m58qc")]
 position = Vector2(288, -4)
@@ -80,7 +80,7 @@ collision_mask = 9
 stun_shot_parent = NodePath("../../StunShotParent")
 camera = NodePath("../../Camera2D")
 other_player = NodePath("../../Player/CharacterBody2D")
-special = 4
+special = 3
 player_num = "1"
 
 [node name="CollisionShape2D" parent="Player2/CharacterBody2D" index="1"]

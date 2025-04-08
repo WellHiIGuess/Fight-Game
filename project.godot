@@ -18,7 +18,7 @@ config/icon="res://icon.svg"
 [display]
 
 window/size/mode=3
-window/stretch/mode="viewport"
+window/stretch/mode="canvas_items"
 
 [input]
 
@@ -134,9 +134,11 @@ Right2={
 
 [physics]
 
+common/physics_ticks_per_second=200
 2d/default_gravity=1100.0
 
 [rendering]
 
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"
+textures/canvas_textures/default_texture_filter=0
+viewport/hdr_2d=true
+2d/snap/snap_2d_transforms_to_pixel=true
