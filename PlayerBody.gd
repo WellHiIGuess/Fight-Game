@@ -1,9 +1,9 @@
 extends Player
 
 
-var SPEED = 1500.0
-var INIT_DASH_SPEED = 3000.0
-var DASH_SPEED = 3000.0
+var SPEED = 900.0
+var INIT_DASH_SPEED = 2000.0
+var DASH_SPEED = 2000.0
 var JUMP_VELOCITY = -800.0
 const WALL_JUMP_VELOCITY = 50000.0
 const TRIPLE_JUMP_VELOCITY = -400.0
@@ -14,7 +14,7 @@ const COPY_WAIT = 0.7
 const JUMP_BUFFER = 0.2
 var jump_buffer = 0.0
 
-const COYOTE_TIME = 0.13
+const COYOTE_TIME = 0.2
 var can_coyote = true
 var coyote_time = 0.0
 
@@ -41,6 +41,7 @@ var time_stop_cooldown = -1.0
 var stun_shot_cooldown = 0.0
 var can_stun_shot = true
 
+var last_dir: Vector2
 var direction: Vector2
 var time_mult = 1.0
 
@@ -231,6 +232,10 @@ func _physics_process(delta):
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	direction = Input.get_vector("Left" + player_num, "Right" + player_num, "Up" + player_num, "Down" + player_num)
+
+	if dashing && direction == Vector2.ZERO:
+		direction = last_dir
+
 	if direction:
 		velocity.x = direction.x * SPEED
 	else:
@@ -374,3 +379,4 @@ func _physics_process(delta):
 		hit_velocity.y = 0
 
 	position += hit_velocity * delta * time_mult
+	last_dir = direction
