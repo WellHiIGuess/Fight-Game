@@ -32,7 +32,7 @@ const TIME_STOP_COOLDOWN = 5.0
 const STUN_SHOT_COOLDOWN = 1.0
 
 const SHOVING_BUFFER = 0.25
-const SHOVING_COOLDOWN = 3.0
+const SHOVING_COOLDOWN = 2.0
 
 # Special variables
 var parry_buffer = 0.0
@@ -58,6 +58,7 @@ var hit_reversed = false
 @export var stun_shot_parent: HitArea
 @onready var radial_shove_area = $RadialShove
 @export var sprite: Sprite2D
+@onready var cool_down_text = $CoolDownText
 @export var collider: CollisionShape2D
 @export var spawn_point: Node2D
 
@@ -160,6 +161,17 @@ func _process(delta):
 	# 	sprite.modulate.g = 1.0
 	# 	sprite.modulate.b = 1.0
 
+	# *COOL DOWN TEXT*
+	match special:
+		Special.Parry:
+			cool_down_text.display_cool_down(parry_cooldown)
+		Special.TimeSlow:
+			cool_down_text.display_cool_down(time_stop_cooldown)
+		Special.StunShot:
+			cool_down_text.display_cool_down(stun_shot_cooldown)
+		Special.RadialShove:
+			cool_down_text.display_cool_down(shoving_cooldown)
+
 	# *COOL DOWNS AND BUFFERS*
 	# PARRY
 	if parry_buffer > 0.0:
@@ -208,8 +220,9 @@ func _process(delta):
 		shoving_buffer -= delta
 	else:
 		shoving = false
+		shoving_cooldown = SHOVING_COOLDOWN
 
-	if shoving_cooldown > 0.0:
+	if shoving_cooldown > 0.0 && !shoving:
 		shoving_cooldown -= delta
 
 	if special == Special.TimeSlow && time_stop_cooldown > 0.0:

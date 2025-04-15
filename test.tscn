@@ -68,7 +68,8 @@ collision_mask = 5
 stun_shot_parent = NodePath("../../StunShotParent")
 camera = NodePath("../../Camera2D")
 other_player = NodePath("../../Player2/CharacterBody2D")
-special = 5
+special = 2
+perk = 0
 player_num = "2"
 
 [node name="Player2" parent="." instance=ExtResource("1_m58qc")]
@@ -81,6 +82,7 @@ stun_shot_parent = NodePath("../../StunShotParent")
 camera = NodePath("../../Camera2D")
 other_player = NodePath("../../Player/CharacterBody2D")
 special = 5
+perk = 0
 player_num = "1"
 
 [node name="CollisionShape2D" parent="Player2/CharacterBody2D" index="1"]
