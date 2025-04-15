@@ -48,6 +48,7 @@ var hit_velocity: Vector2
 var hit_reversed = false
 
 @export var stun_shot_parent: HitArea
+@onready var radial_shove_area = $RadialShove
 @export var sprite: Sprite2D
 @export var collider: CollisionShape2D
 @export var spawn_point: Node2D
