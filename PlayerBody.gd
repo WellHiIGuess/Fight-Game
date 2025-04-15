@@ -31,6 +31,9 @@ const TIME_STOP_COOLDOWN = 5.0
 
 const STUN_SHOT_COOLDOWN = 1.0
 
+const SHOVING_BUFFER = 0.25
+const SHOVING_COOLDOWN = 3.0
+
 # Special variables
 var parry_buffer = 0.0
 var parry_cooldown = -1.0
@@ -40,6 +43,10 @@ var time_stop_cooldown = -1.0
 
 var stun_shot_cooldown = 0.0
 var can_stun_shot = true
+
+var shoving = false
+var shoving_buffer = 0.0
+var shoving_cooldown = 0.0
 
 var last_dir: Vector2
 var direction: Vector2
@@ -153,6 +160,7 @@ func _process(delta):
 	# 	sprite.modulate.g = 1.0
 	# 	sprite.modulate.b = 1.0
 
+	# *COOL DOWNS AND BUFFERS*
 	# PARRY
 	if parry_buffer > 0.0:
 		sprite.modulate.r = 0.0
@@ -194,6 +202,15 @@ func _process(delta):
 		stun_shot_cooldown -= delta
 	else:
 		can_stun_shot = true
+
+	# RADIAL SHOVE
+	if shoving_buffer > 0.0:
+		shoving_buffer -= delta
+	else:
+		shoving = false
+
+	if shoving_cooldown > 0.0:
+		shoving_cooldown -= delta
 
 	if special == Special.TimeSlow && time_stop_cooldown > 0.0:
 		time_stop_cooldown -= delta * time_mult
@@ -319,6 +336,10 @@ func _physics_process(delta):
 					
 					stun_shot_cooldown = STUN_SHOT_COOLDOWN
 					can_stun_shot = false
+			Special.RadialShove:
+				if shoving_cooldown <= 0.0:
+					shoving = true
+					shoving_buffer = SHOVING_BUFFER
 
 	if dashing:
 		dash_time -= delta

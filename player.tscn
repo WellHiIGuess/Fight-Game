@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://wa3jj7dmxfhq"]
+[gd_scene load_steps=10 format=3 uid="uid://wa3jj7dmxfhq"]
 
 [ext_resource type="Texture2D" uid="uid://b74ynluxn0x3l" path="res://icon.svg" id="1_4ajqq"]
 [ext_resource type="Script" uid="uid://btjvxkmbbtn25" path="res://PlayerBody.gd" id="2_u6w33"]
 [ext_resource type="Script" uid="uid://bkqsvnostqvux" path="res://sprite.gd" id="3_hqtel"]
 [ext_resource type="Texture2D" uid="uid://bve6e86ywgi5p" path="res://Wheel.png" id="3_sweqy"]
 [ext_resource type="Script" uid="uid://dhaar87xe76ff" path="res://HitArea.gd" id="4_v5jwa"]
+[ext_resource type="Script" uid="uid://rbuxthrtyib0" path="res://RadialShoveArea.gd" id="6_2hs0m"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jrlxq"]
 radius = 64.0
@@ -13,7 +14,7 @@ radius = 64.0
 radius = 53.0094
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sweqy"]
-radius = 102.005
+radius = 123.004
 
 [node name="Player" type="Node2D"]
 
@@ -66,9 +67,9 @@ FORCE = 900.0
 shape = SubResource("CircleShape2D_dqmrv")
 
 [node name="RadialShove" type="Area2D" parent="CharacterBody2D" node_paths=PackedStringArray("player")]
-visible = false
-script = ExtResource("4_v5jwa")
+script = ExtResource("6_2hs0m")
 player = NodePath("..")
+FORCE = 1000.0
 metadata/_custom_type_script = "uid://dhaar87xe76ff"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/RadialShove"]

@@ -80,7 +80,7 @@ collision_mask = 9
 stun_shot_parent = NodePath("../../StunShotParent")
 camera = NodePath("../../Camera2D")
 other_player = NodePath("../../Player/CharacterBody2D")
-special = 3
+special = 5
 player_num = "1"
 
 [node name="CollisionShape2D" parent="Player2/CharacterBody2D" index="1"]
