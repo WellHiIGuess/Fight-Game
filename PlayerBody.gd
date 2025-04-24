@@ -34,6 +34,8 @@ const STUN_SHOT_COOLDOWN = 1.0
 const SHOVING_BUFFER = 0.25
 const SHOVING_COOLDOWN = 2.0
 
+const TELEPORT_COOLDOWN = 5.0
+
 # Special variables
 var parry_buffer = 0.0
 var parry_cooldown = -1.0
@@ -48,6 +50,8 @@ var shoving = false
 var shoving_buffer = 0.0
 var shoving_cooldown = 0.0
 
+var teleport_cooldown = 0.0
+
 var last_dir: Vector2
 var direction: Vector2
 var time_mult = 1.0
@@ -57,6 +61,7 @@ var hit_reversed = false
 
 @export var stun_shot_parent: HitArea
 @onready var radial_shove_area = $RadialShove
+@onready var teleport_point = $"../TeleportPoint"
 @export var sprite: Sprite2D
 @onready var cool_down_text = $CoolDownText
 @export var collider: CollisionShape2D
@@ -171,6 +176,8 @@ func _process(delta):
 			cool_down_text.display_cool_down(stun_shot_cooldown)
 		Special.RadialShove:
 			cool_down_text.display_cool_down(shoving_cooldown)
+		Special.Teleport:
+			cool_down_text.display_cool_down(teleport_cooldown)
 
 	# *COOL DOWNS AND BUFFERS*
 	# PARRY
@@ -218,12 +225,17 @@ func _process(delta):
 	# RADIAL SHOVE
 	if shoving_buffer > 0.0:
 		shoving_buffer -= delta
-	else:
+
+	if shoving && shoving_buffer <= 0:
 		shoving = false
 		shoving_cooldown = SHOVING_COOLDOWN
 
 	if shoving_cooldown > 0.0 && !shoving:
 		shoving_cooldown -= delta
+
+	# TELEPORT
+	if teleport_cooldown > 0.0:
+		teleport_cooldown -= delta
 
 	if special == Special.TimeSlow && time_stop_cooldown > 0.0:
 		time_stop_cooldown -= delta * time_mult
@@ -314,6 +326,7 @@ func _physics_process(delta):
 		dashing = true
 		dash_dir = direction
 		dash_buffered = false
+		dash_stun = 0.0
 	elif Input.is_action_just_pressed("Dash" + player_num) && (dash_time <= DASH_BUFFER) && dashing && !dash_buffered:
 		dash_buffered = true
 
@@ -353,6 +366,13 @@ func _physics_process(delta):
 				if shoving_cooldown <= 0.0:
 					shoving = true
 					shoving_buffer = SHOVING_BUFFER
+			Special.Teleport:
+				if !teleport_point.visible:
+					teleport_point.visible = true
+					teleport_point.global_position = global_position
+				elif teleport_cooldown <= 0.0:
+					global_position = teleport_point.global_position
+					teleport_cooldown = TELEPORT_COOLDOWN
 
 	if dashing:
 		dash_time -= delta

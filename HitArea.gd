@@ -25,6 +25,7 @@ func _process(delta):
 			player.hit_velocity = -body_in_area.PARRY_FORCE * player.direction.normalized()
 			player.dashing = false
 			player.dash_stun = body_in_area.DASH_STUN
+			player.can_dash = false
 			
 
 		# Character Idea

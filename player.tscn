@@ -87,6 +87,14 @@ script = ExtResource("7_1jxqw")
 
 [node name="SpawnPoint" type="Node2D" parent="."]
 
+[node name="TeleportPoint" type="Node2D" parent="."]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="TeleportPoint"]
+modulate = Color(0, 1, 0, 1)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_4ajqq")
+
 [connection signal="body_entered" from="CharacterBody2D/HitArea" to="CharacterBody2D/HitArea" method="_on_body_entered"]
 [connection signal="body_exited" from="CharacterBody2D/HitArea" to="CharacterBody2D/HitArea" method="_on_body_exited"]
 [connection signal="body_entered" from="CharacterBody2D/RadialShove" to="CharacterBody2D/RadialShove" method="_on_body_entered"]
