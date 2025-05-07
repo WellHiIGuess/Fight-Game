@@ -42,6 +42,7 @@ modulate = Color(1, 1, 1, 0)
 texture = ExtResource("1_4ajqq")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." node_paths=PackedStringArray("sprite", "collider", "spawn_point", "copies", "hit_area")]
+collision_priority = 2.0
 script = ExtResource("2_u6w33")
 sprite = NodePath("Sprite2D")
 collider = NodePath("CollisionShape2D")
@@ -50,7 +51,7 @@ copies = NodePath("../Copies")
 hit_area = NodePath("HitArea")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D" node_paths=PackedStringArray("player")]
-texture_filter = 1
+texture_filter = 5
 scale = Vector2(2, 2)
 texture = ExtResource("3_sweqy")
 script = ExtResource("3_hqtel")
@@ -62,7 +63,7 @@ shape = SubResource("CircleShape2D_jrlxq")
 [node name="HitArea" type="Area2D" parent="CharacterBody2D" node_paths=PackedStringArray("player")]
 script = ExtResource("4_v5jwa")
 player = NodePath("..")
-FORCE = 900.0
+FORCE = 800.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/HitArea"]
 shape = SubResource("CircleShape2D_dqmrv")

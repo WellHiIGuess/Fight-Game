@@ -411,12 +411,6 @@ func _physics_process(delta):
 
 	hit_area.position = direction * 100
 
-	for i in range(0, get_slide_collision_count()):
-		var collision = get_slide_collision(i)
-
-		if collision.get_collider() != null && collision.get_collider() is RigidBody2D && is_on_wall():
-			collision.get_collider().linear_velocity.x = velocity.x
-		
 	velocity *= time_mult
 
 	move_and_slide()
