@@ -31,7 +31,7 @@ size = Vector2(2434, 104)
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("rect")]
 texture_filter = 1
-zoom = Vector2(0.6, 0.6)
+zoom = Vector2(0.5, 0.5)
 script = ExtResource("1_g14j6")
 rect = NodePath("CanvasLayer/ColorRect")
 
@@ -110,7 +110,7 @@ scale = Vector2(5.625, 0.25)
 texture = ExtResource("1_15a8f")
 
 [node name="Platform2" type="Node2D" parent="."]
-position = Vector2(988, 0)
+position = Vector2(1186, 0)
 rotation = 1.5708
 scale = Vector2(1.89, 1.89)
 
@@ -123,7 +123,7 @@ position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_05snw")
 
 [node name="Platform3" type="Node2D" parent="."]
-position = Vector2(-991, 2.85672e-12)
+position = Vector2(-1184, 2.29974e-10)
 rotation = 1.5708
 scale = Vector2(1.89, 1.89)
 
@@ -136,7 +136,7 @@ position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_05snw")
 
 [node name="Platform4" type="Node2D" parent="."]
-position = Vector2(2, -570)
+position = Vector2(2, -680)
 scale = Vector2(3.38, 1.89)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Platform4"]
@@ -196,7 +196,7 @@ scale = Vector2(0.589844, 0.597656)
 texture = ExtResource("1_15a8f")
 
 [node name="RespawnArea" type="Area2D" parent="."]
-position = Vector2(0, 591)
+position = Vector2(0, 674)
 script = ExtResource("4_vkchw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RespawnArea"]
